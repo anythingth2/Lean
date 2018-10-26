@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,14 +14,16 @@ class _HomePageState extends State<HomePage> {
   CameraController cameraController;
   List<CameraDescription> cameras;
   bool isReady = false;
-
+  final CloudLabelDetector labelDetector =
+      FirebaseVision.instance.cloudLabelDetector();
+  _HomePageState() {}
   @override
   void initState() {
     super.initState();
     availableCameras().then((cameras) {
       this.cameras = cameras;
       cameraController =
-          CameraController(this.cameras[0], ResolutionPreset.low);
+          CameraController(this.cameras[0], ResolutionPreset.medium);
       cameraController.initialize().then((_) {
         setState(() {
           isReady = true;
@@ -29,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   String get timestamp => DateTime.now().toString();
-  void takeImage() async {
+  Future<File> takeImage() async {
     if (!cameraController.value.isInitialized ||
         cameraController.value.isTakingPicture) {
       return null;
@@ -46,7 +50,22 @@ class _HomePageState extends State<HomePage> {
       return null;
     }
 
-    debugPrint('capture! $filePath');
+    ImageProperties properties =
+        await FlutterNativeImage.getImageProperties(filePath);
+    print(
+        'capture $filePath width:${properties.width} height:${properties.height}');
+
+    File resizedFile = await FlutterNativeImage.compressImage(filePath,
+        targetHeight: properties.height ~/ 5,
+        targetWidth: properties.width ~/ 5);
+    return resizedFile;
+  }
+
+  Future<List<Label>> classify(File file) async {
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(file);
+    List<Label> labels = await this.labelDetector.detectInImage(visionImage);
+    labels.forEach((label) => print('${label.label} ${label.confidence}'));
+    return labels;
   }
 
   @override
@@ -67,7 +86,33 @@ class _HomePageState extends State<HomePage> {
                 ),
                 FloatingActionButton(
                   child: Icon(Icons.camera_alt),
-                  onPressed: takeImage,
+                  onPressed: () async {
+                    File file = await takeImage();
+                    List<Label> labels = await classify(file);
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text('Found object!'),
+                              content: ListView(
+                                children: labels
+                                    .map<Widget>((label) => Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Text(
+                                              '${label.label} ${label.confidence}'),
+                                        ))
+                                    .toList(),
+                              ),
+                              actions: <Widget>[
+                                MaterialButton(
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),onPressed: ()=>Navigator.of(context).pop(),
+                                )
+                              ],
+                            ));
+                  },
                 )
               ],
             )
