@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'Pages/Pages.dart';
+import 'Util.dart';
 
-void main() => runApp(App());
+void main() async {
+  await Util.initilize();
+  runApp(App());
+}
 
 class App extends StatelessWidget {
   // This widget is the root of your application.
@@ -20,7 +24,7 @@ class App extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: SpashScreenPage(),
     );
   }
 }
