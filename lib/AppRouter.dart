@@ -5,7 +5,7 @@ import 'dart:async';
 enum TransitionType { FadeIn, InFromRight, InFromLeft }
 
 class AppRouter {
-  AppRouter() {}
+  AppRouter();
 
   PageRoute<T> getPageRoute<T>(Widget page, TransitionType transitionType,
       {Duration transitionDuration: const Duration(milliseconds: 200)}) {
@@ -50,5 +50,10 @@ class AppRouter {
   void goHome(BuildContext context) {
     Navigator.of(context)
         .pushReplacement(getPageRoute(HomePage(), TransitionType.FadeIn));
+  }
+
+  void goObjectDetection(BuildContext context) {
+    Navigator.of(context)
+        .push(getPageRoute(ObjectDetectionPage(), TransitionType.InFromRight));
   }
 }
