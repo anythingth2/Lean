@@ -16,28 +16,43 @@ class _HomePageState extends State<HomePage>
       );
   TabController tabController;
 
-  Widget rewardBuilder(Reward reward) => Card(
-        margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-        elevation: 4.0,
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          child: Row(
-            children: <Widget>[
-              Image.asset(
-                reward.image,
-                width: 64,
-                height: 64,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text('${reward.fromPrice}'),
-                    Text('${reward.toPrice}')
-                  ],
+  Widget rewardBuilder(Reward reward) => GestureDetector(
+        onTap: () {
+          Util.router.goCoupon(context, reward);
+        },
+        child: Card(
+          margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          elevation: 4.0,
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            height: 128,
+            child: Row(
+              children: <Widget>[
+                Container(
+                  height: double.infinity,
+                  alignment: Alignment.topCenter,
+                  child: Image.asset(
+                    reward.logo,
+                    width: 32,
+                    height: 32,
+                  ),
                 ),
-              )
-            ],
+                Image.asset(
+                  reward.image,
+                  width: 64,
+                  height: 64,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text('${reward.fromPrice}'),
+                      Text('${reward.toPrice}')
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       );
@@ -88,10 +103,8 @@ class _HomePageState extends State<HomePage>
             Expanded(
               child: TabBarView(
                 controller: this.tabController,
-                children:
-                    List.generate(DataRepository.rewardTiles.length, (i) {
-                  List<Reward> rewards =
-                      DataRepository.rewardTiles[i].rewards;
+                children: List.generate(DataRepository.rewardTiles.length, (i) {
+                  List<Reward> rewards = DataRepository.rewardTiles[i].rewards;
                   return ListView(
                     children: rewards.map<Widget>(rewardBuilder).toList(),
                     shrinkWrap: true,

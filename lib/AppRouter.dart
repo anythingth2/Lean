@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Pages/Pages.dart';
+import 'package:lean/Pages/Pages.dart';
 import 'dart:async';
+import 'package:lean/Models/Models.dart';
 
 enum TransitionType { FadeIn, InFromRight, InFromLeft }
 
@@ -55,5 +56,10 @@ class AppRouter {
   void goObjectDetection(BuildContext context) {
     Navigator.of(context)
         .push(getPageRoute(ObjectDetectionPage(), TransitionType.InFromRight));
+  }
+
+  void goCoupon(BuildContext context, Reward reward) {
+    Navigator.of(context)
+        .push(getPageRoute(CouponPage(reward), TransitionType.InFromRight));
   }
 }
