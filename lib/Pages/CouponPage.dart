@@ -10,6 +10,45 @@ class CouponPage extends StatefulWidget {
 }
 
 class _CouponPageState extends State<CouponPage> {
+  Widget selectionBuilder(String assetPath, String name, int index) =>
+      GestureDetector(
+        onTap: () => this.onTapSelection(index),
+        child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(border: Border.all(width: 1.0)),
+            width: 64,
+            height: 64,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  assetPath,
+                  width: 32,
+                  height: 32,
+                ),
+                Text(name)
+              ],
+            )),
+      );
+  void onTapSelection(int index) {}
+  void showRedeemDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+            title: Text('Hello World'),
+            content: Container(
+              height: 128.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  selectionBuilder('Assets/recycle.png', 'Barcode',0,),
+                  selectionBuilder('Assets/recycle.png', 'QR Code',1),
+                  selectionBuilder('Assets/recycle.png', 'Code',2),
+                ],
+              ),
+            )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +99,9 @@ class _CouponPageState extends State<CouponPage> {
                 child: RaisedButton(
                   padding: EdgeInsets.all(32.0),
                   child: Text('Redeem'),
-                  onPressed: () {},
+                  onPressed: () {
+                    showRedeemDialog();
+                  },
                 ),
               ),
             )

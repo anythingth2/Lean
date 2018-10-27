@@ -62,4 +62,6 @@ class AppRouter {
     Navigator.of(context)
         .push(getPageRoute(CouponPage(reward), TransitionType.InFromRight));
   }
+
+  
 }

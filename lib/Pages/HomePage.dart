@@ -82,7 +82,14 @@ class _HomePageState extends State<HomePage>
         ),
         drawer: Drawer(
           child: Container(
-            color: Colors.red,
+            child: ListView(
+              children: <Widget>[
+                DrawerHeader(
+                  child: Text('นาย รักษ์โลก'),
+                  decoration: BoxDecoration(color: Colors.green),
+                ),
+              ],
+            ),
           ),
         ),
         body: Container(
