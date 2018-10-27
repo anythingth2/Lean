@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lean/Util.dart';
 import 'package:lean/DataRepository.dart';
 import 'package:lean/Models/Models.dart';
+import 'dart:io';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +16,31 @@ class _HomePageState extends State<HomePage>
       );
   TabController tabController;
 
+  Widget rewardBuilder(Reward reward) => Card(
+        margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        elevation: 4.0,
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Row(
+            children: <Widget>[
+              Image.asset(
+                reward.image,
+                width: 64,
+                height: 64,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text('${reward.fromPrice}'),
+                    Text('${reward.toPrice}')
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
   @override
   void initState() {
     // TODO: implement initState
@@ -44,43 +70,36 @@ class _HomePageState extends State<HomePage>
             color: Colors.red,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            child: Column(children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 32.0),
-                child: Text(
-                  'Reward',
-                  style: TextStyle(fontSize: 24.0),
-                ),
+        body: Container(
+          child: Column(children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 32.0),
+              child: Text(
+                'Reward',
+                style: TextStyle(fontSize: 24.0),
               ),
-              TabBar(
-                labelColor: Colors.black,
+            ),
+            TabBar(
+              labelColor: Colors.black,
+              controller: this.tabController,
+              tabs: List.generate(DataRepository.rewardTiles.length,
+                  (i) => tabBuilder(DataRepository.rewardTiles[i].title)),
+            ),
+            Expanded(
+              child: TabBarView(
                 controller: this.tabController,
-                tabs: List.generate(DataRepository.rewardTiles.length,
-                    (i) => tabBuilder(DataRepository.rewardTiles[i].title)),
+                children:
+                    List.generate(DataRepository.rewardTiles.length, (i) {
+                  List<Reward> rewards =
+                      DataRepository.rewardTiles[i].rewards;
+                  return ListView(
+                    children: rewards.map<Widget>(rewardBuilder).toList(),
+                    shrinkWrap: true,
+                  );
+                }),
               ),
-              Container(
-                height: 512.0,
-                child: TabBarView(
-                  controller: this.tabController,
-                  children:
-                      List.generate(DataRepository.rewardTiles.length, (i) {
-                    List<Reward> rewards =
-                        DataRepository.rewardTiles[i].rewards;
-                    return Column(
-                      children: rewards
-                          .map<Widget>((reward) => Container(
-                                height: 100,
-                                child: Text('${reward.fromPrice}'),
-                              ))
-                          .toList(),
-                    );
-                  }),
-                ),
-              )
-            ]),
-          ),
+            )
+          ]),
         ),
       ),
     );
