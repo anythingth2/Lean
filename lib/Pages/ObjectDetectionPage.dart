@@ -6,6 +6,9 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 
 class ObjectDetectionPage extends StatefulWidget {
+  bool isDetection;
+  ObjectDetectionPage({this.isDetection});
+
   @override
   _ObjectDetectionPageState createState() => _ObjectDetectionPageState();
 }
@@ -84,36 +87,40 @@ class _ObjectDetectionPageState extends State<ObjectDetectionPage> {
                     aspectRatio: this.cameraController.value.aspectRatio,
                   ),
                 ),
-                FloatingActionButton(
-                  child: Icon(Icons.camera_alt),
-                  onPressed: () async {
-                    File file = await takeImage();
-                    List<Label> labels = await classify(file);
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: Text('Found object!'),
-                              content: ListView(
-                                children: labels
-                                    .map<Widget>((label) => Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0),
-                                          child: Text(
-                                              '${label.label} ${label.confidence}'),
-                                        ))
-                                    .toList(),
-                              ),
-                              actions: <Widget>[
-                                MaterialButton(
-                                  child: Text(
-                                    'OK',
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                  onPressed: () => Navigator.of(context).pop(),
-                                )
-                              ],
-                            ));
-                  },
+                Offstage(
+                  offstage: !widget.isDetection,
+                  child: FloatingActionButton(
+                    child: Icon(Icons.camera_alt),
+                    onPressed: () async {
+                      File file = await takeImage();
+                      List<Label> labels = await classify(file);
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text('Found object!'),
+                                content: ListView(
+                                  children: labels
+                                      .map<Widget>((label) => Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: Text(
+                                                '${label.label} ${label.confidence}'),
+                                          ))
+                                      .toList(),
+                                ),
+                                actions: <Widget>[
+                                  MaterialButton(
+                                    child: Text(
+                                      'OK',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  )
+                                ],
+                              ));
+                    },
+                  ),
                 )
               ],
             )

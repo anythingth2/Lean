@@ -53,9 +53,9 @@ class AppRouter {
         .pushReplacement(getPageRoute(HomePage(), TransitionType.FadeIn));
   }
 
-  void goObjectDetection(BuildContext context) {
+  void goObjectDetection(BuildContext context,{bool isDetection}) {
     Navigator.of(context)
-        .push(getPageRoute(ObjectDetectionPage(), TransitionType.InFromRight));
+        .push(getPageRoute(ObjectDetectionPage(isDetection: isDetection,), TransitionType.InFromRight));
   }
 
   void goCoupon(BuildContext context, Reward reward) {

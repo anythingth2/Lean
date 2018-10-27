@@ -21,6 +21,9 @@ class _DataPageState extends State<DataPage> {
     stream.forEach((count) {
       setState(() {
         start -= Duration(seconds: 1);
+        if (start == Duration(seconds: 0)) {
+          Navigator.of(context).pop();
+        }
       });
     });
   }

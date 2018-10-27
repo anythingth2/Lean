@@ -58,7 +58,6 @@ class _HomePageState extends State<HomePage>
       );
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     tabController = TabController(length: 3, initialIndex: 0, vsync: this);
   }
@@ -75,7 +74,7 @@ class _HomePageState extends State<HomePage>
             IconButton(
               icon: Icon(Icons.camera_alt),
               onPressed: () {
-                Util.router.goObjectDetection(context);
+                Util.router.goObjectDetection(context, isDetection: false);
               },
             )
           ],
