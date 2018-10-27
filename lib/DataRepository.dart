@@ -31,5 +31,7 @@ class DataRepository {
           '1-31 Oct 2018'),
     ])
   ];
+
+  static int coin = 135;
   static initilize() {}
 }

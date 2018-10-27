@@ -83,10 +83,24 @@ class _HomePageState extends State<HomePage>
           child: Container(
             child: ListView(
               children: <Widget>[
-                DrawerHeader(
-                  child: Text('นาย รักษ์โลก'),
-                  decoration: BoxDecoration(color: Colors.green),
+                UserAccountsDrawerHeader(
+                  accountName: Text('นาย รักษ์โลก'),
+                  accountEmail: Text('ยอดแต้มคงเหลือ ${DataRepository.coin} '),
                 ),
+                ListTile(
+                  title: Text('Object Detection'),
+                  onTap: () {
+                    Util.router.goObjectDetection(context, isDetection: true);
+                  },
+                ),
+                ListTile(
+                  title: Text('Q & A'),
+                  enabled: true,
+                ),
+                ListTile(
+                  title: Text('Sign out'),
+                  enabled: true,
+                )
               ],
             ),
           ),

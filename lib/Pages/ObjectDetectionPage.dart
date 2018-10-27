@@ -59,8 +59,8 @@ class _ObjectDetectionPageState extends State<ObjectDetectionPage> {
         'capture $filePath width:${properties.width} height:${properties.height}');
 
     File resizedFile = await FlutterNativeImage.compressImage(filePath,
-        targetHeight: properties.height ~/ 5,
-        targetWidth: properties.width ~/ 5);
+        targetHeight: properties.height ~/ 10,
+        targetWidth: properties.width ~/ 10);
     return resizedFile;
   }
 
